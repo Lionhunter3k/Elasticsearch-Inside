@@ -132,7 +132,7 @@ namespace ElasticsearchInside
 
         private async Task WaitForOk(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var timeoutSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            var timeoutSource = new CancellationTokenSource(TimeSpan.FromMinutes(10));
             var linked = CancellationTokenSource.CreateLinkedTokenSource(timeoutSource.Token, cancellationToken);
             
             var statusUrl = new UriBuilder(_settings.GetUrl())
@@ -155,7 +155,7 @@ namespace ElasticsearchInside
                     catch (TaskCanceledException ex) {
                         throw new TimeoutWaitingForElasticsearchStatusException(ex); 
                     }
-                    await Task.Delay(100, linked.Token).ConfigureAwait(false);
+                    await Task.Delay(500, linked.Token).ConfigureAwait(false);
 
                 } while (statusCode != HttpStatusCode.OK && !linked.IsCancellationRequested);
             }

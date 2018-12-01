@@ -12,7 +12,7 @@ namespace ElasticsearchInside.Tests
         [Test]
         public async Task Can_start()
         {
-            using (var elasticsearch = await new Elasticsearch(i => i.SetPort(4444).EnableLogging()).Ready())
+            using (var elasticsearch = await new Elasticsearch(i => i.SetPort(9194).EnableLogging()).Ready())
             {
                 ////Arrange
                 var client = new ElasticClient(new ConnectionSettings(elasticsearch.Url));
@@ -29,7 +29,7 @@ namespace ElasticsearchInside.Tests
         [Test]
         public void Can_start_sync()
         {
-            using (var elasticsearch = new Elasticsearch(i => i.SetPort(4444).EnableLogging()).ReadySync())
+            using (var elasticsearch = new Elasticsearch(i => i.SetPort(9199).EnableLogging()).ReadySync())
             {
                 ////Arrange
                 var client = new ElasticClient(new ConnectionSettings(elasticsearch.Url));
@@ -44,13 +44,13 @@ namespace ElasticsearchInside.Tests
         [Test]
         public async Task Can_insert_data()
         {
-            using (var elasticsearch = await new Elasticsearch(i => i.SetPort(4444).EnableLogging()).Ready())
+            using (var elasticsearch = await new Elasticsearch(i => i.SetPort(9198).EnableLogging()).Ready())
             {
                 ////Arrange
                 var client = new ElasticClient(new ConnectionSettings(elasticsearch.Url));
 
                 ////Act
-                client.Index(new { id = "tester" }, i => i.Index("test-index").Type("test-type"));
+                client.Index(new { id = "tester" }, i => i.Index("test-index").Type("test-type").Refresh(global::Elasticsearch.Net.Refresh.WaitFor));
 
                 ////Assert
                 var result = client.Get(DocumentPath<dynamic>.Id("tester"), i => i.Index("test-index").Type("test-type"));
@@ -62,7 +62,7 @@ namespace ElasticsearchInside.Tests
         [Test]
         public async Task Can_change_configuration()
         {
-            using (var elasticsearch = await new Elasticsearch(c => c.SetPort(4444).EnableLogging().LogTo(Console.WriteLine)).Ready())
+            using (var elasticsearch = await new Elasticsearch(c => c.SetPort(9197).EnableLogging().LogTo(Console.WriteLine)).Ready())
             {
                 ////Arrange
                 var client = new ElasticClient(new ConnectionSettings(elasticsearch.Url));
@@ -72,7 +72,7 @@ namespace ElasticsearchInside.Tests
 
                 ////Assert
                 Assert.That(result.IsValid);
-                Assert.That(elasticsearch.Url.Port, Is.EqualTo(4444));
+                Assert.That(elasticsearch.Url.Port, Is.EqualTo(9197));
             }
         }
         
@@ -80,7 +80,7 @@ namespace ElasticsearchInside.Tests
         public async Task Can_log_output()
         {
             var logged = false;
-            using (var elasticsearch = new Elasticsearch(c => c.SetPort(4444).EnableLogging().LogTo(message => logged = true)))
+            using (var elasticsearch = new Elasticsearch(c => c.SetPort(9195).EnableLogging().LogTo(message => logged = true)))
             {
                 await elasticsearch.Ready();
 
@@ -92,7 +92,7 @@ namespace ElasticsearchInside.Tests
         [Test]
         public async Task Can_install_plugin()
         {
-            using (var elasticsearch = await new Elasticsearch(c => c.SetPort(4444).EnableLogging().AddPlugin(new Plugin("analysis-icu"))).Ready())
+            using (var elasticsearch = await new Elasticsearch(c => c.SetPort(9196).EnableLogging().AddPlugin(new Plugin("analysis-icu"))).Ready())
             {
                 ////Arrange
                 var client = new ElasticClient(new ConnectionSettings(elasticsearch.Url));
@@ -112,7 +112,7 @@ namespace ElasticsearchInside.Tests
             Settings settings;
 
             ////Act
-            using (var elasticsearch = await new Elasticsearch(c => c.SetPort(4444).EnableLogging().LogTo(Console.WriteLine)).Ready())
+            using (var elasticsearch = await new Elasticsearch(c => c.SetPort(9193).EnableLogging().LogTo(Console.WriteLine)).Ready())
                 settings = (Settings)elasticsearch.Settings;
 
 
