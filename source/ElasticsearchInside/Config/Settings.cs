@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace ElasticsearchInside.Config
 {
-    internal class Settings : ISettings
+    public class Settings : ISettings
     {
         private static readonly Random Random = new Random();
-        internal readonly DirectoryInfo RootFolder = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N")));
+        public readonly DirectoryInfo RootFolder = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N")));
         public DirectoryInfo ElasticsearchHomePath => new DirectoryInfo(Path.Combine(RootFolder.FullName, "es"));
         public DirectoryInfo JvmPath => new DirectoryInfo(Path.Combine(RootFolder.FullName, "jre"));
         public IDictionary<string, string> ElasticsearchParameters { get; } = new Dictionary<string, string>();
@@ -76,7 +76,7 @@ namespace ElasticsearchInside.Config
             return result;
         }
 
-        internal async Task WriteSettings()
+        public async Task WriteSettings()
         {
             var pluginDir = new DirectoryInfo(Path.Combine(ElasticsearchHomePath.FullName, "plugins"));
             if (!pluginDir.Exists)
@@ -86,7 +86,7 @@ namespace ElasticsearchInside.Config
             await WriteYaml();
         }
 
-        internal async Task WriteYaml()
+        public async Task WriteYaml()
         {
             var configDir = new DirectoryInfo(Path.Combine(ElasticsearchHomePath.FullName, "config"));
             if (!configDir.Exists)
@@ -102,7 +102,7 @@ namespace ElasticsearchInside.Config
                     await writer.WriteLineAsync($"{elasticsearchParameter.Key}: {elasticsearchParameter.Value}");
         }
 
-        internal async Task WriteLoggingConfig()
+        public async Task WriteLoggingConfig()
         {
             var configDir = new DirectoryInfo(Path.Combine(ElasticsearchHomePath.FullName, "config"));
             if (!configDir.Exists)

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ElasticsearchInside.Utilities.Archive
 {
-    internal class ArchiveWriter : BinaryWriter
+    public class ArchiveWriter : BinaryWriter
     {
         public ArchiveWriter(Stream destinationStream, bool leaveOpen = false) : base(destinationStream,Encoding.UTF8, leaveOpen) { }
 

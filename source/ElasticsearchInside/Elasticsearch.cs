@@ -11,8 +11,7 @@ using ElasticsearchInside.Config;
 using ElasticsearchInside.Executables;
 using ElasticsearchInside.Utilities;
 using ElasticsearchInside.Utilities.Archive;
-using LZ4PCL;
-using CompressionMode = LZ4PCL.CompressionMode;
+using LZ4;
 
 namespace ElasticsearchInside
 {
@@ -27,22 +26,22 @@ namespace ElasticsearchInside
         private readonly Task _startupTask;
         private Settings _settings;
 
-        static Elasticsearch()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
-            {
-                if (e.Name != "LZ4PCL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")
-                    return null;
+        //static Elasticsearch()
+        //{
+        //    AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
+        //    {
+        //        if (e.Name != "LZ4PCL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")
+        //            return null;
 
-                using (var memStream = new MemoryStream())
-                {
-                    using (var stream = typeof(Elasticsearch).Assembly.GetManifestResourceStream(typeof(RessourceTarget), "LZ4PCL.dll"))
-                        stream.CopyTo(memStream);
+        //        using (var memStream = new MemoryStream())
+        //        {
+        //            using (var stream = typeof(Elasticsearch).Assembly.GetManifestResourceStream(typeof(RessourceTarget), "LZ4PCL.dll"))
+        //                stream.CopyTo(memStream);
 
-                    return Assembly.Load(memStream.GetBuffer());
-                }
-            };
-        }
+        //            return Assembly.Load(memStream.GetBuffer());
+        //        }
+        //    };
+        //}
 
         public Uri Url => _settings.GetUrl();
         public ISettings Settings => _settings;
@@ -188,7 +187,7 @@ namespace ElasticsearchInside
             var started = Stopwatch.StartNew();
 
             using (var stream = GetType().Assembly.GetManifestResourceStream(typeof(RessourceTarget), name))
-            using (var decompresStream = new LZ4Stream(stream, CompressionMode.Decompress))
+            using (var decompresStream = new LZ4Stream(stream, LZ4StreamMode.Decompress))
             using (var archiveReader = new ArchiveReader(decompresStream))
                 await archiveReader.ExtractToDirectory(destination, cancellationToken).ConfigureAwait(false);
            
