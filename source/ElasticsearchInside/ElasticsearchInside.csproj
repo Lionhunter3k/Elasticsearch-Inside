@@ -7,6 +7,14 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <Authors>Monzoom (Poul Foged)</Authors>
+    <Company />
+    <Version>1.0.0</Version>
+    <PackageId>ElasticsearchInside.Standard</PackageId>
+    <Description>Ported the original package (https://github.com/poulfoged/elasticsearch-inside) to .Net Standard 2.0. Start ElasticSearch from .NET for integration tests. Contains both java runtime and elasticsearch 6 embedded in the dll.</Description>
+    <PackageProjectUrl>https://github.com/Lionhunter3k/Elasticsearch-Inside</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/Lionhunter3k/Elasticsearch-Inside/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>elasticsearch, elastic, integration, tests</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
